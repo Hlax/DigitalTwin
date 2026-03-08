@@ -48,7 +48,7 @@ generate
 critique  
 evaluate  
 review  
-publish
+retain / stage / publish
 
 Artifacts are not the goal.
 

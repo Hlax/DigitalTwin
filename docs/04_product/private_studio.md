@@ -16,10 +16,19 @@ The studio allows Harvey to:
 - annotate outputs
 - manage projects
 - ingest source material
-- approve or reject artifacts
-- publish work
+- approve artifacts for retention
+- mark artifacts as needs_revision
+- reject artifacts for intended use
+- archive artifacts without deletion
+- mark artifacts approved_for_publication
+- publish artifacts that are already approved_for_publication
+- review staging habitat proposals
+- promote approved staging releases to public
+- review system or governance proposals before adoption
 
 The studio is **not public**.
+
+It is the main operational and governance interface for the Twin.
 
 ---
 
@@ -43,10 +52,32 @@ View artifacts generated in recent sessions.
 Actions:
 
 approve  
+approve_with_annotation  
+needs_revision  
 reject  
-annotate  
 archive  
+approve_for_publication  
 publish
+
+---
+
+### Staging Review
+
+Review staged habitat proposals and presentation experiments.
+
+Actions:
+
+approve_for_staging  
+request_revision  
+reject_for_staging  
+promote_to_public_release
+
+This panel is used for:
+- layout experiments
+- habitat/interface proposals
+- collection previews
+- staged narrative sequences
+- other public-surface candidates
 
 ---
 
@@ -76,7 +107,7 @@ Browse archived threads and artifacts.
 
 # 3. Review Workflow
 
-Typical workflow:
+Typical artifact workflow:
 
 Twin generates artifacts  
 ↓  
@@ -86,7 +117,23 @@ Harvey reviews outputs
 ↓  
 Approval state updated  
 ↓  
+Optional `approved_for_publication` decision  
+↓  
 Optional publication
+
+Typical habitat/surface workflow:
+
+Twin or Harvey proposes staging habitat change  
+↓  
+Proposal appears in staging review queue  
+↓  
+Harvey reviews staging result  
+↓  
+Approved staging release candidate  
+↓  
+Optional promotion to public habitat
+
+Artifact publication and habitat release must remain separate workflows.
 
 ---
 
