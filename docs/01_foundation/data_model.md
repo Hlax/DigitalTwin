@@ -74,6 +74,23 @@ Scoring values in V1 should use **0.0 to 1.0 floats**.
 - `harvey`
 - `system`
 
+### critique_outcome
+- `continue`
+- `branch`
+- `shift_medium`
+- `reflect`
+- `archive_candidate`
+- `stop`
+
+### approval_state
+- `pending_review`
+- `approved`
+- `approved_with_annotation`
+- `needs_revision`
+- `rejected`
+- `archived`
+- `approved_for_publication`
+
 ## 3. Core Entities
 
 ## twin_identity
@@ -275,6 +292,33 @@ Notes:
 - This supports the more flexible multi-thread relationship you asked for.
 - For implementation simplicity, the system can still prefer one primary thread.
 
+## critique_record
+Represents qualitative self-critique attached to an artifact.
+
+```yaml
+critique_record_id: uuid
+artifact_id: uuid
+session_id: uuid | null
+intent_note: text | null
+strength_note: text | null
+originality_note: text | null
+energy_note: text | null
+potential_note: text | null
+medium_fit_note: text | null
+coherence_note: text | null
+fertility_note: text | null
+overall_summary: text | null
+critique_outcome: critique_outcome | null
+created_at: timestamp
+updated_at: timestamp
+```
+
+Notes:
+- A critique record is produced after artifact generation and before evaluation scoring.
+- In V1, critique records are primarily artifact-level records.
+- `critique_outcome` is a practical recommendation, not a human approval state.
+- Critique records are qualitative and should remain distinct from evaluation signals.
+
 ## evaluation_signal
 Represents structured evaluation attached to an entity.
 
@@ -296,6 +340,9 @@ updated_at: timestamp
 Notes:
 - `target_type` may be `artifact`, `idea`, `idea_thread`, or `session`.
 - This allows evaluation to grow beyond only artifacts.
+- Evaluation signals may be informed by critique records, runtime context, recurrence logic, and later human feedback.
+- Canonical persisted signals for V1 are `alignment_score`, `emergence_score`, `fertility_score`, `pull_score`, and `recurrence_score`.
+- `resonance_score` remains optional / future-facing.
 
 ## human_feedback
 Represents explicit Harvey review input.
@@ -315,6 +362,26 @@ created_at: timestamp
 Notes:
 - `created_by` can remain simple in V1.
 - Later versions may support richer reviewer identity models.
+
+## approval_record
+Represents explicit Harvey approval-state history for an artifact.
+
+```yaml
+approval_record_id: uuid
+artifact_id: uuid
+approval_state: approval_state
+reviewer: string | null
+review_note: text | null
+annotation_note: text | null
+decided_at: timestamp
+created_at: timestamp
+updated_at: timestamp
+```
+
+Notes:
+- Approval state is distinct from critique outcome, evaluation signals, and publication state.
+- An artifact may have multiple approval records over time.
+- Approval history should preserve meaningful transitions rather than only the latest state.
 
 ## archive_entry
 Represents paused work with return context.
@@ -454,8 +521,11 @@ The data model should separate:
 Recommended V1 logic:
 
 - all new artifacts begin as `draft`
-- Harvey may later move them to `approved`, `rejected`, `archived`, or `published`
+- after generation, self critique, and evaluation, reviewed artifacts may enter `pending_review`
+- Harvey may later create approval transitions such as `approved`, `approved_with_annotation`, `needs_revision`, `rejected`, `archived`, or `approved_for_publication`
+- approval state is not the same as publication state
 - `approved` means worth keeping
+- `approved_for_publication` means cleared for external release
 - `published` means intentionally made public
 
 This allows the system to accumulate useful work without forcing immediate publication decisions.

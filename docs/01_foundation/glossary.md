@@ -95,16 +95,70 @@ A recorded representation of creative state at a point in time.
 
 For V1, snapshots are stored at the session level.
 
+## Self Critique
+The Twin’s internal post-generation review step.
+
+Self critique happens after an artifact is generated and before evaluation scoring or human review.
+
+Its purpose is to describe what the artifact attempted, what worked, what failed, and whether the direction should continue, branch, shift medium, archive, or stop.
+
+## Critique Record
+A structured record produced by self critique.
+
+A critique record captures qualitative judgment about an artifact, such as intent, strength, originality, energy, unresolved potential, medium fit, coherence, fertility, and an overall recommendation.
+
+A critique record is not the same as an evaluation signal.
+
+## Critique Outcome
+The practical next-step recommendation produced by a critique record.
+
+For V1, critique outcomes may include:
+- `continue`
+- `branch`
+- `shift_medium`
+- `reflect`
+- `archive_candidate`
+- `stop`
+
 ## Evaluation Signal
 A structured judgment signal used to evaluate an artifact, idea, thread, or related output.
 
-Core examples include:
+Evaluation signals are the scored or structured layer of judgment that follows self critique.
+
+Core canonical examples include:
 - alignment score
 - emergence score
 - fertility score
 - pull score
 - recurrence score
 - resonance score (future optional)
+
+Evaluation signals are not the same as critique records.
+
+## Approval State
+The human-facing review status of an artifact after generation, self critique, and evaluation.
+
+Approval state is not the same as critique outcome, evaluation signal, artifact status, or publication state.
+
+For V1, approval states may include:
+- `pending_review`
+- `approved`
+- `approved_with_annotation`
+- `needs_revision`
+- `rejected`
+- `archived`
+- `approved_for_publication`
+
+## Approved With Annotation
+An artifact that is accepted, but preserved with meaningful Harvey context, guidance, or framing attached.
+
+## Needs Revision
+An artifact that is not rejected, but should be revised before approval or release.
+
+## Approved for Publication
+An artifact that is approved for external-facing release.
+
+This is not the same as already being published.
 
 ## Human Feedback
 A review signal provided by Harvey.
@@ -153,6 +207,17 @@ An artifact that has been generated but not yet resolved through review.
 
 ## Approved
 An artifact that is worth keeping, developing, or preserving as a positive signal.
+
+## Approved With Annotation
+An artifact that is accepted, but preserved with meaningful Harvey context, guidance, or framing attached.
+
+## Needs Revision
+An artifact that is not rejected, but should be revised before approval or release.
+
+## Approved for Publication
+An artifact that is approved for external-facing release.
+
+This is not the same as already being published.
 
 ## Rejected
 An artifact that is not worth continuing in its current form.

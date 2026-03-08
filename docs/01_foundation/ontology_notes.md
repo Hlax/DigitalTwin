@@ -35,7 +35,7 @@ The Twin's world is composed of six major layers:
    The records that preserve prior sessions, source material, recurring ideas, archived work, and learned patterns.
 
 4. **Judgment Layer**  
-   The evaluation signals, critique records, and human feedback that shape future decisions.
+   The critique records, evaluation signals, and approval states that shape future decisions and human curation.
 
 5. **Governance Layer**  
    The approval rules, change records, and intervention logic that prevent silent drift.
@@ -113,10 +113,48 @@ A structured judgment signal applied to an artifact, idea, session, or thread.
 
 Examples include alignment, emergence, fertility, pull, recurrence, and later resonance.
 
+### Critique Record
+A structured qualitative judgment produced by the Twin after artifact generation.
+
+A critique record captures how the Twin interprets an artifact before evaluation scoring or human review.
+
+For V1, a critique record may include:
+- intent
+- strength
+- originality
+- energy
+- unresolved potential
+- medium fit
+- coherence
+- fertility
+- overall summary
+- critique outcome
+
+Critique records belong to the Judgment Layer and should remain distinct from evaluation signals and human feedback.
+
 ### Human Feedback
 A review signal provided by Harvey.
 
 Human feedback does not replace evaluation signals. It informs them and should be treated as higher-value guidance when explicit.
+
+### Approval State
+The current human-facing review status of an artifact.
+
+Approval state tracks where an artifact stands in Harvey’s review flow after generation, self critique, and evaluation.
+
+For V1, approval state is distinct from:
+- critique outcome
+- evaluation signals
+- publication state
+
+Examples:
+- pending_review
+- approved
+- approved_with_annotation
+- needs_revision
+- rejected
+- archived
+- approved_for_publication
 
 ### Archive Entry
 A record for paused work that may later be revisited.
@@ -184,8 +222,18 @@ Below is the conceptual relationship map.
 - Artifact **may reference** one or more Ideas
 - Artifact **receives** Evaluation Signals
 - Artifact **receives** Human Feedback
+- Artifact **receives** Approval State transitions
+- Approval State **tracks** human review status for an Artifact
+- Approval State **remains distinct from** Publication state
 - Artifact **may enter** Archive
 - Artifact **may later become** Published output
+
+- Creative Session **may produce** Critique Records during artifact cycles
+- Artifact **receives** Critique Records
+- Critique Record **interprets** an Artifact
+- Critique Record **informs** Evaluation Signals
+- Evaluation Signal **structures** judgment derived from critique and runtime logic
+- Human Feedback **may reinforce or correct** Critique Records and Evaluation Signals
 
 - Archive Entry **references** paused Artifacts, Ideas, or Threads
 - Archive Entry **stores** reason paused, unresolved questions, and return potential
@@ -224,6 +272,15 @@ Some artifacts are generated from source material rather than from pure spontane
 
 ### Memory Record → Future Decisions
 Memory is what allows the Twin to accumulate continuity and not behave like a stateless generator.
+
+### Artifact → Critique Record → Evaluation Signal
+After generation, the Twin first produces qualitative judgment about the artifact.
+
+That judgment is captured in a critique record.
+
+The system then derives structured evaluation signals from that critique and from runtime context.
+
+This preserves a clean separation between interpretation, scoring, and human review.
 
 ## 6. Entity Hierarchy and Granularity
 
@@ -267,13 +324,11 @@ The ontology distinguishes between creative existence and public display.
 An artifact can exist without ever being published.
 
 For V1:
-- `draft` means generated and not yet resolved by review
-- `approved` means worth keeping or continuing
-- `rejected` means not worth continuing in current form
-- `archived` means paused with return potential
-- `published` means intentionally surfaced publicly
+- `draft` means generated and not yet resolved internally
+- approval state tracks human review status such as `pending_review`, `approved`, `approved_with_annotation`, `needs_revision`, `rejected`, `archived`, or `approved_for_publication`
+- publication state tracks whether something remains private, internal, scheduled, or published
 
-This matches the constitution's idea that public display is curated by Harvey rather than automatically driven by the Twin.
+This prevents ontology collapse between generation status, review status, and external visibility.
 
 ## 9. Staging Habitat Concept
 
