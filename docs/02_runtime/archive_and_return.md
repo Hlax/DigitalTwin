@@ -80,8 +80,7 @@ When a thread is archived:
 Individual artifacts may still have status values such as:
 
 -   `draft`
--   `approved`
--   `rejected`
+-   `archived`
 -   `published`
 
 But archival logic operates at the **thread level**.

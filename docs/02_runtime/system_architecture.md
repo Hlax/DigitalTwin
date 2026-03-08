@@ -265,8 +265,6 @@ Artifacts pass through several stages.
 
 ```text
 draft
-approved
-rejected
 archived
 published
 ```
@@ -298,7 +296,7 @@ Stored as Draft
      ↓
 Human Review
      ↓
-Approved / Rejected / Archived
+Approval State Updated
      ↓
 Optional Publication
 ```
@@ -319,8 +317,6 @@ Artifacts are stored in the repository structure:
 ```text
 artifacts/
    drafts/
-   approved/
-   rejected/
    archived/
    published/
 ```

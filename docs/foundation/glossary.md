@@ -27,18 +27,16 @@ For V1:
 - `concept` = structured creative thinking output that is still treated as a real artifact
 
 ## Artifact Status
-The lifecycle condition of an artifact within the system.
+The current lifecycle state of an artifact.
 
-Artifact status represents storage or lifecycle state, not human judgment.
-
-Approval state represents review outcome and may influence status changes.
-
-For V1 artifact status values are:
+For V1:
 - `draft`
+- `approved`
+- `rejected`
 - `archived`
 - `published`
 
-Approval-related outcomes are represented through **Approval State**, not Artifact Status.
+`approved` does not mean `published`.
 
 ## Twin
 The full creative system across time.
@@ -97,72 +95,16 @@ A recorded representation of creative state at a point in time.
 
 For V1, snapshots are stored at the session level.
 
-## Self Critique
-The Twin’s internal post-generation review step.
-
-Self critique happens after an artifact is generated and before evaluation scoring or human review.
-
-Its purpose is to describe what the artifact attempted, what worked, what failed, and whether the direction should continue, branch, shift medium, archive, or stop.
-
-## Critique Record
-A structured record produced by self critique.
-
-A critique record captures qualitative judgment about an artifact, such as intent, strength, originality, energy, unresolved potential, medium fit, coherence, fertility, and an overall recommendation.
-
-A critique record is not the same as an evaluation signal.
-
-## Critique Outcome
-The practical next-step recommendation produced by a critique record.
-
-For V1, critique outcomes may include:
-- `continue`
-- `branch`
-- `shift_medium`
-- `reflect`
-- `archive_candidate`
-- `stop`
-
 ## Evaluation Signal
 A structured judgment signal used to evaluate an artifact, idea, thread, or related output.
 
-Evaluation signals are the scored or structured layer of judgment that follows self critique.
-
-Core canonical examples include:
+Core examples include:
 - alignment score
 - emergence score
 - fertility score
 - pull score
 - recurrence score
-
-Future optional signals may include:
-- resonance score
-
-Evaluation signals are not the same as critique records.
-
-## Approval State
-The human-facing review status of an artifact after generation, self critique, and evaluation.
-
-Approval state is not the same as critique outcome, evaluation signal, artifact status, or publication state.
-
-For V1, approval states may include:
-- `pending_review`
-- `approved`
-- `approved_with_annotation`
-- `needs_revision`
-- `rejected`
-- `archived`
-- `approved_for_publication`
-
-## Approved With Annotation
-An artifact that is accepted, but preserved with meaningful Harvey context, guidance, or framing attached.
-
-## Needs Revision
-An artifact that is not rejected, but should be revised before approval or release.
-
-## Approved for Publication
-An artifact that is approved for external-facing release.
-
-This is not the same as already being published.
+- resonance score (future optional)
 
 ## Human Feedback
 A review signal provided by Harvey.
@@ -210,21 +152,13 @@ Publication is governed by Harvey approval and is separate from generation quali
 An artifact that has been generated but not yet resolved through review.
 
 ## Approved
-An approval-state outcome meaning the artifact is worth keeping, developing, or preserving.
-
-Approved is not the same as published.
+An artifact that is worth keeping, developing, or preserving as a positive signal.
 
 ## Rejected
-An approval-state outcome meaning the artifact is not approved for its intended role in its current form.
-
-Rejected is not the same as deletion.
+An artifact that is not worth continuing in its current form.
 
 ## Archived
-Paused work that may later be revived.
-
-For artifacts, `archived` is a lifecycle state.
-In approval flow, `archived` is a human review state meaning the artifact is intentionally preserved but not active.
-Archived is not equivalent to deletion or rejection.
+An artifact or related work item that is paused with potential return value.
 
 ## Published
 An artifact that has been intentionally surfaced publicly.
@@ -233,3 +167,46 @@ An artifact that has been intentionally surfaced publicly.
 A vocabulary term whose meaning should remain stable across docs and implementation.
 
 Build agents should not silently redefine canonical terms.
+
+## Canonical Signal
+A signal whose meaning is stable across docs and may be persisted in the data model.
+
+Canonical signals are part of the Twin’s approved vocabulary and may be stored in entities such as `evaluation_signal`, `artifact`, or `creative_state_snapshot`.
+
+Examples include:
+- `alignment_score`
+- `emergence_score`
+- `fertility_score`
+- `pull_score`
+- `recurrence_score`
+
+Canonical signals should not be silently renamed or redefined.
+
+## Derived Runtime Signal
+A temporary signal computed during runtime from canonical signals or state values.
+
+Derived runtime signals are used for decision-making but are not part of the canonical persisted schema unless Harvey approves promotion into the ontology and data model.
+
+Examples may include:
+- `novelty_score`
+- `avatar_alignment_gap`
+- `repetition_pressure`
+- `exploration_bias`
+
+Derived runtime signals should not be treated as canonical entities by default.
+
+## Memory Type
+A conceptual category describing what kind of memory a `memory_record` represents.
+
+Memory types help distinguish different retained meanings without making every memory record identical in purpose.
+
+Possible V1 categories may include:
+- `session_reflection`
+- `pattern_memory`
+- `decision_memory`
+- `identity_memory`
+- `review_memory`
+- `return_memory`
+- `synthesis_memory`
+
+Memory type may remain implementation-flexible in V1 unless later formalized as an enum.

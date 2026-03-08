@@ -27,6 +27,8 @@ Scoring values in V1 should use **0.0 to 1.0 floats**.
 
 ### artifact_status
 - `draft`
+- `approved`
+- `rejected`
 - `archived`
 - `published`
 
@@ -71,23 +73,6 @@ Scoring values in V1 should use **0.0 to 1.0 floats**.
 - `twin`
 - `harvey`
 - `system`
-
-### critique_outcome
-- `continue`
-- `branch`
-- `shift_medium`
-- `reflect`
-- `archive_candidate`
-- `stop`
-
-### approval_state
-- `pending_review`
-- `approved`
-- `approved_with_annotation`
-- `needs_revision`
-- `rejected`
-- `archived`
-- `approved_for_publication`
 
 ## 3. Core Entities
 
@@ -263,9 +248,6 @@ Notes:
 - `content_uri` supports binary or remote media.
 - `preview_uri` supports thumbnails, screenshots, or fast review representations later.
 - `primary_idea_id` and `primary_thread_id` are convenience references; many-to-many joins may still be used for richer linking.
-- Artifact-level score fields represent the latest evaluation snapshot for quick access.
-- The `evaluation_signal` entity stores the canonical evaluation history.
-- Artifact score fields should be treated as a convenience cache of the latest evaluation values.
 
 ## artifact_to_idea
 Optional join model if one artifact should reference multiple ideas.
@@ -293,33 +275,6 @@ Notes:
 - This supports the more flexible multi-thread relationship you asked for.
 - For implementation simplicity, the system can still prefer one primary thread.
 
-## critique_record
-Represents qualitative self-critique attached to an artifact.
-
-```yaml
-critique_record_id: uuid
-artifact_id: uuid
-session_id: uuid | null
-intent_note: text | null
-strength_note: text | null
-originality_note: text | null
-energy_note: text | null
-potential_note: text | null
-medium_fit_note: text | null
-coherence_note: text | null
-fertility_note: text | null
-overall_summary: text | null
-critique_outcome: critique_outcome | null
-created_at: timestamp
-updated_at: timestamp
-```
-
-Notes:
-- A critique record is produced after artifact generation and before evaluation scoring.
-- In V1, critique records are primarily artifact-level records.
-- `critique_outcome` is a practical recommendation, not a human approval state.
-- Critique records are qualitative and should remain distinct from evaluation signals.
-
 ## evaluation_signal
 Represents structured evaluation attached to an entity.
 
@@ -341,10 +296,6 @@ updated_at: timestamp
 Notes:
 - `target_type` may be `artifact`, `idea`, `idea_thread`, or `session`.
 - This allows evaluation to grow beyond only artifacts.
-- Evaluation signals may be informed by critique records, runtime context, recurrence logic, and later human feedback.
-- Canonical persisted signals for V1 are `alignment_score`, `emergence_score`, `fertility_score`, `pull_score`, and `recurrence_score`.
-- `resonance_score` is optional and future-facing.
-- It may exist in the schema for forward compatibility, but should not be required, populated by default, or used in core V1 runtime logic unless formally adopted in a future system update.
 
 ## human_feedback
 Represents explicit Harvey review input.
@@ -364,27 +315,6 @@ created_at: timestamp
 Notes:
 - `created_by` can remain simple in V1.
 - Later versions may support richer reviewer identity models.
-
-## approval_record
-Represents explicit Harvey approval-state history for an artifact.
-
-```yaml
-approval_record_id: uuid
-artifact_id: uuid
-approval_state: approval_state
-reviewer: string | null
-review_note: text | null
-annotation_note: text | null
-decided_at: timestamp
-created_at: timestamp
-updated_at: timestamp
-```
-
-Notes:
-- Approval state is distinct from critique outcome, evaluation signals, and publication state.
-- An artifact may have multiple approval records over time.
-- Approval history should preserve meaningful transitions rather than only the latest state.
-- For V1, the current approval state is derived from the latest `approval_record` for an artifact unless a later implementation explicitly denormalizes it onto the `artifact` record.
 
 ## archive_entry
 Represents paused work with return context.
@@ -467,6 +397,16 @@ updated_at: timestamp
 
 Notes:
 - This is intentionally broader than source items and artifacts.
+- `memory_type` is intentionally implementation-flexible in V1.
+- Suggested conceptual categories include:
+  - `session_reflection`
+  - `pattern_memory`
+  - `decision_memory`
+  - `identity_memory`
+  - `review_memory`
+  - `return_memory`
+  - `synthesis_memory`
+- These categories do not need to be enforced as enums unless later implementation requires tighter constraints.
 
 ## theme
 Represents a lightweight recurring motif.
@@ -524,11 +464,8 @@ The data model should separate:
 Recommended V1 logic:
 
 - all new artifacts begin as `draft`
-- after generation, self critique, and evaluation, reviewed artifacts may enter `pending_review`
-- Harvey may later create approval transitions such as `approved`, `approved_with_annotation`, `needs_revision`, `rejected`, `archived`, or `approved_for_publication`
-- approval state is not the same as publication state
+- Harvey may later move them to `approved`, `rejected`, `archived`, or `published`
 - `approved` means worth keeping
-- `approved_for_publication` means cleared for external release
 - `published` means intentionally made public
 
 This allows the system to accumulate useful work without forcing immediate publication decisions.
@@ -556,7 +493,30 @@ Build agents should follow these rules:
 - do not treat source items, memory records, and artifacts as interchangeable
 - do not remove idea-thread relationships for implementation convenience without approval
 
-## 8. Future Expansion Notes
+## 8. Derived Runtime Signals
+
+Not all runtime decision variables belong in the persisted schema.
+
+The runtime may compute temporary helper values from canonical state fields and evaluation signals in order to guide session behavior.
+
+Examples may include:
+
+- `novelty_score`
+- `avatar_alignment_gap`
+- `repetition_pressure`
+- `exploration_bias`
+- `artifact_index_in_session`
+
+These derived runtime signals:
+
+- should not be stored as independent database fields by default
+- should not be added to canonical entities without approval
+- may be recomputed at runtime when needed
+- may be documented in system docs and pseudocode for behavioral clarity
+
+For V1, `novelty_score` should be treated as a derived runtime signal rather than a persisted evaluation field unless explicitly promoted later.
+
+## 9. Future Expansion Notes
 
 Likely later additions:
 

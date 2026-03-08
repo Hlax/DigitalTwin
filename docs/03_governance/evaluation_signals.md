@@ -136,7 +136,7 @@ A **state transition** means the system changes from one condition to another be
 
 Examples:
 
-- `draft` → `approved`
+- `draft` → `pending_review`
 - `active thread` → `archived thread`
 - `continue mode` → `reflect mode`
 - `low recurrence` → `high return weighting`
@@ -650,6 +650,9 @@ Potential additions:
 
 Optional later addition if formally promoted beyond runtime helper status:
 - `Novelty Score`
+
+Evaluation signals do not represent human approval or final quality.
+They exist only to guide runtime behavior.
 
 ### Ontology
 Potential addition:
