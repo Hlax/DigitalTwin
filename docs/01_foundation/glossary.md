@@ -27,16 +27,18 @@ For V1:
 - `concept` = structured creative thinking output that is still treated as a real artifact
 
 ## Artifact Status
-The current lifecycle state of an artifact.
+The lifecycle condition of an artifact within the system.
 
-For V1:
+Artifact status represents storage or lifecycle state, not human judgment.
+
+Approval state represents review outcome and may influence status changes.
+
+For V1 artifact status values are:
 - `draft`
-- `approved`
-- `rejected`
 - `archived`
 - `published`
 
-`approved` does not mean `published`.
+Approval-related outcomes are represented through **Approval State**, not Artifact Status.
 
 ## Twin
 The full creative system across time.
@@ -207,17 +209,6 @@ An artifact that has been generated but not yet resolved through review.
 
 ## Approved
 An artifact that is worth keeping, developing, or preserving as a positive signal.
-
-## Approved With Annotation
-An artifact that is accepted, but preserved with meaningful Harvey context, guidance, or framing attached.
-
-## Needs Revision
-An artifact that is not rejected, but should be revised before approval or release.
-
-## Approved for Publication
-An artifact that is approved for external-facing release.
-
-This is not the same as already being published.
 
 ## Rejected
 An artifact that is not worth continuing in its current form.
